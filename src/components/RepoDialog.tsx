@@ -7,7 +7,9 @@ interface RepoDialogProps {
 }
 
 const RepoDialog = ({ open, onClose }: RepoDialogProps) => {
-  const [repoUrl, setRepoUrl] = useState('');  const handleSubmit = async () => {
+
+  const [repoUrl, setRepoUrl] = useState('');
+  const handleSubmit = async () => {
     // If no URL provided, use default, but only when Analyze is clicked
     const url = repoUrl.trim() || 'https://github.com/nathannavmoondi/Resume-Qualify-Demo';
     onClose();
@@ -22,14 +24,14 @@ const RepoDialog = ({ open, onClose }: RepoDialogProps) => {
         <TextField
           autoFocus
           margin="dense"
-          label="Repository URL or Local Path"
+          label="GitHub Repository URL"
           type="text"
           fullWidth
           variant="outlined"
           value={repoUrl}
           onChange={(e) => setRepoUrl(e.target.value)}
-          placeholder="https://github.com/username/repository or C:/path/to/solution"
-          helperText="Enter a GitHub URL or local path to a solution"
+          placeholder="https://github.com/nathannavmoondi/Resume-Qualify-Demo"
+          helperText="Enter a GitHub repository URL (or press ENTER)"
         />
       </DialogContent>
       <DialogActions>

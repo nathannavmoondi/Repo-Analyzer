@@ -29,12 +29,18 @@ const ContentContainer = styled(Box)({
   overflow: 'hidden',
 });
 
+// Resizable sidebar styles
 const Sidebar = styled(Box)({
-  width: 300,
+  width: 220,
+  minWidth: 140,
+  maxWidth: 400,
   flexShrink: 0,
   borderRight: '1px solid #333333',
   backgroundColor: '#252526',
   overflow: 'auto',
+  resize: 'horizontal',
+  cursor: 'ew-resize',
+  transition: 'width 0.15s',
 });
 
 const ContentArea = styled(Box)({
@@ -49,6 +55,7 @@ function App() {
   const [selectedFileContent, setSelectedFileContent] = useState<string>('Welcome to Repo Analyzer\n\nClick "Open" in the navbar to analyze a GitHub repository.');
   const [fileAnalysis, setFileAnalysis] = useState<string>('');
   const [fileLoading, setFileLoading] = useState(false);
+  const [repoUrl, setRepoUrl] = useState<string>('');
 
   // No automatic loading of default repository on mount
 
@@ -57,12 +64,25 @@ function App() {
       setFileLoading(true);
       try {
         const event = e as CustomEvent<string>;
-        setCurrentGitHubRepoInfo(event.detail); // Set repo info for GitHub file fetches
-        const fileData = await analyzeRepo(event.detail);
+        const url = event.detail.trim();
+        // Only allow GitHub URLs
+        if (!/^https:\/\/github\.com\//i.test(url)) {
+          setSelectedFileContent('Only GitHub repository URLs are supported.');
+          setFiles([]);
+          setRepoUrl('');
+          setFileLoading(false);
+          return;
+        }
+        setRepoUrl(url);
+        setCurrentGitHubRepoInfo(url); // Set repo info for GitHub file fetches
+        const fileData = await analyzeRepo(url);
         setFiles(Array.isArray(fileData) ? fileData : []);
+        setSelectedFileContent('Repo Loaded!\n\nPlease click a file to learn more about it');
+        setFileAnalysis('');
       } catch (error) {
         console.error('Error analyzing repo:', error);
         setSelectedFileContent('Error analyzing repository. Please check the URL and try again.');
+        setRepoUrl('');
       } finally {
         setFileLoading(false);
       }
@@ -92,9 +112,9 @@ function App() {
   return (
     <MainContainer>
       <CssBaseline />
-      <Navbar />
-      <ContentContainer>
-        <Sidebar>
+      <Navbar repoUrl={repoUrl} />
+      <ContentContainer sx={{ pb: '56px' }}>
+        <Sidebar sx={{ background: '#232323', borderRight: '1px solid #333', p: 0, minWidth: 0 }}>
           <FileTree files={files} onFileSelect={handleFileSelect} />
         </Sidebar>
         <ContentArea>
@@ -105,6 +125,9 @@ function App() {
           />
         </ContentArea>
       </ContentContainer>
+      <Box sx={{ width: '100vw', background: 'linear-gradient(90deg, #1976d2 60%, #1565c0 100%)', color: '#fff', textAlign: 'center', py: 1.5, fontSize: 15, fontWeight: 500, letterSpacing: 0.2, position: 'fixed', left: 0, bottom: 0, zIndex: 1200 }}>
+        © 2025 Repo Analyzer AI - Nathan Nav Moondi and Happy Dappy Technologies. All rights reserved.
+      </Box>
     </MainContainer>
   );
 }

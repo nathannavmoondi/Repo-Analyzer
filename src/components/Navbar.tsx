@@ -1,18 +1,47 @@
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { useState } from 'react';
 import RepoDialog from './RepoDialog';
 
-const Navbar = () => {
+interface NavbarProps {
+  repoUrl?: string;
+}
+
+const Navbar = ({ repoUrl }: NavbarProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
     <>
-      <AppBar position="static" sx={{ backgroundColor: '#1e1e1e' }}>
-        <Toolbar variant="dense">
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: '#ffffff' }}>
-            Repo Analyzer
-          </Typography>
-          <Button color="inherit" onClick={() => setIsDialogOpen(true)}>
+      <AppBar position="static" sx={{ backgroundColor: '#000', boxShadow: 'none', borderBottom: '1px solid #222' }}>
+        <Toolbar variant="dense" sx={{ minHeight: 48, display: 'flex', alignItems: 'center', px: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <img src="/favicon.ico" alt="favicon" style={{ width: 26, height: 26, marginRight: 10, marginTop: 1, borderRadius: 4, boxShadow: '0 1px 4px #0002' }} />
+            <Typography variant="h6" component="div" sx={{ color: '#fff', fontWeight: 700, fontSize: 20, letterSpacing: 0.5 }}>
+              Repo Analyzer
+            </Typography>
+          </Box>
+          {repoUrl && (
+            <Box sx={{ color: '#4fa3ff', fontSize: 14, ml: 2, fontFamily: 'monospace', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 500 }}>
+              {repoUrl}
+            </Box>
+          )}
+          <Box sx={{ flexGrow: 1 }} />
+          <Button
+            color="primary"
+            variant="contained"
+            sx={{
+              background: 'linear-gradient(90deg, #1976d2 60%, #1565c0 100%)',
+              color: '#fff',
+              fontWeight: 600,
+              borderRadius: 2,
+              px: 3,
+              boxShadow: 'none',
+              textTransform: 'none',
+              fontSize: 15,
+              ml: 2,
+              '&:hover': { background: '#1565c0' },
+            }}
+            onClick={() => setIsDialogOpen(true)}
+          >
             Open
           </Button>
         </Toolbar>

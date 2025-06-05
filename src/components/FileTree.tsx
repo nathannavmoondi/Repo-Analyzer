@@ -25,23 +25,14 @@ interface FileTreeProps {
 
 const TreeContainer = styled(Box)({
   height: '100%',
-  backgroundColor: '#252526',
+  backgroundColor: '#232323',
   color: '#cccccc',
   overflow: 'auto',
   paddingTop: '4px',
+  scrollbarWidth: 'none',
+  msOverflowStyle: 'none',
   '&::-webkit-scrollbar': {
-    width: '14px',
-  },
-  '&::-webkit-scrollbar-track': {
-    backgroundColor: '#1e1e1e',
-  },
-  '&::-webkit-scrollbar-thumb': {
-    backgroundColor: '#424242',
-    border: '3px solid #1e1e1e',
-    borderRadius: '7px',
-    '&:hover': {
-      backgroundColor: '#525252',
-    },
+    display: 'none',
   },
 });
 

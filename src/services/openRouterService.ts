@@ -47,16 +47,10 @@ const headers = {
 
 export const analyzeRepo = async (repoUrl: string = 'https://github.com/nathannavmoondi/Resume-Qualify-Demo') => {
   try {
-    // If it's a local path (Windows or Unix), use local API
-    const isLocal = /^[a-zA-Z]:\\|^\//.test(repoUrl);
-    if (isLocal) {
-      // Call local Vite plugin endpoint to get file tree
-      const response = await axios.post('http://localhost:5173/__vite_plugin_os__/readDir', {
-        path: repoUrl
-      });
-      return response.data;
+    // Only allow GitHub URLs
+    if (!/^https:\/\/github\.com\//i.test(repoUrl)) {
+      throw new Error('Only GitHub repository URLs are supported.');
     }
-    // Otherwise, treat as GitHub URL
     // Accepts full URL or owner/repo
     let owner = '', repo = '', branch = 'main';
     let repoMatch = repoUrl.match(/github.com[/:]([^/]+)\/([^/]+)(?:\/tree\/([^/]+))?/);
@@ -179,8 +173,9 @@ export const analyzeFile = async (fileUrl: string): Promise<FileAnalysis> => {
 - Use <pre> and <code> for code, and <span> or <b> for highlights.
 - Use subtle color highlights for important points, but keep the layout compact and readable.
 - Do not include line numbers in your analysis.
-- Avoid h1/h2 and large top margins. Use h3/h4 for section titles, and keep everything visually tight.
+- Don't use headers, instead use bold.
 - Do NOT add extra blank lines after each header or section. Text is white.
+- Do not define paddings or margins.
 - Do NOT include <html>, <body>, or <head> tags in your response. Only return the HTML fragment for the analysis panel.`
    },
           {
@@ -195,10 +190,13 @@ export const analyzeFile = async (fileUrl: string): Promise<FileAnalysis> => {
 
     // Remove all <br> tags (including encoded and variants) from the analysis HTML
     let analysisHtml = response.data.choices[0].message.content;
-    // Remove <br>, <br/>, <br />, any case, any whitespace
-    analysisHtml = analysisHtml.replace(/<br\s*\/?\s*>/gi, '');
-    // Remove encoded &lt;br&gt;, &lt;br/&gt;, &lt;br /&gt;, any case, any whitespace
-    analysisHtml = analysisHtml.replace(/&lt;br\s*\/?\s*&gt;/gi, '');
+    // Remove all <br> tag variants (HTML and encoded)
+analysisHtml = analysisHtml.replace(/(<br\s*\/?\s*>|<br\/>|<br>|&lt;br\s*\/?\s*&gt;|&lt;br&gt;)/gi, '');
+// Remove ```html and ``` (for code block wrappers)
+analysisHtml = analysisHtml.replace(/```html|```/gi, '');
+analysisHtml = analysisHtml.trim();
+console.log('should be no br', analysisHtml); // Debug log 
+
     return {
       content,
       analysis: analysisHtml

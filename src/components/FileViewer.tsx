@@ -91,7 +91,7 @@ const FileViewer = ({ fileContent, analysis, loading = false }: FileViewerProps)
             margin: 0,
             background: 'transparent',
           }}
-          showLineNumbers={true}
+          showLineNumbers={false}
           wrapLongLines={true}
         >
           {fileContent || 'Select a file to view its contents'}
@@ -114,17 +114,13 @@ const FileViewer = ({ fileContent, analysis, loading = false }: FileViewerProps)
 function renderAnalysisWithCode(analysis: string): string {
   // Replace markdown code blocks with <pre><code> and inline code with <code>
   // This is a simple implementation for demonstration
-  const tempAnalysis = 
-  analysis
-    .replace(/```([a-zA-Z]*)\n([\s\S]*?)```/g, (match, lang, code) => {
-      // Use HTML escaping for code
-      const escaped = code.replace(/[&<>]/g, (c: string) => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c as keyof {'&':string,'<':string,'>':string}]||c));
-      return `<pre style="background:#23272e;padding:8px;border-radius:4px;"><code>${escaped}</code></pre>`;
-    })
-    .replace(/`([^`]+)`/g, '<code style="background:#23272e;padding:2px 4px;border-radius:3px;">$1</code>')
-    .replace(/\n/g, '<br/>');
+let tempAnalysis = analysis;
+tempAnalysis = tempAnalysis.replace(/(<br\s*\/?\s*>|<br\/>|<br>|&lt;br\s*\/?\s*&gt;|&lt;br&gt;)/gi, '');
+// Remove ```html and ``` (for code block wrappers)
+tempAnalysis = tempAnalysis.replace(/```html|```/gi, '');
+tempAnalysis = tempAnalysis.trim();
 
-    console.log('Rendered analysis HTML:', tempAnalysis); // Debug log
+    console.log('Rendered analysis HTML no br:', tempAnalysis); // Debug log
     return tempAnalysis;
 }
 

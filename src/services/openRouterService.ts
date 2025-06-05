@@ -1,6 +1,6 @@
 // Utility: Extracts owner, repo, branch from a GitHub URL or owner/repo string and sets window.currentRepoInfo
 export function setCurrentGitHubRepoInfo(repoUrl: string) {
-  let owner = '', repo = '', branch = 'main';
+  let owner = '', repo = '', branch = 'master';
   let repoMatch = repoUrl.match(/github.com[/:]([^/]+)\/([^/]+)(?:\/tree\/([^/]+))?/);
   if (!repoMatch) {
     // Try owner/repo format
@@ -15,8 +15,8 @@ export function setCurrentGitHubRepoInfo(repoUrl: string) {
     owner = repoMatch[1];
     repo = repoMatch[2].replace(/\.git$/, '');
     if (repoMatch[3]) branch = repoMatch[3];
+    else branch = 'master';
   }
-  // Optionally, fetch default branch from GitHub API (async) if needed
   (window as any).currentRepoInfo = { owner, repo, branch };
 }
 import axios from 'axios';
@@ -52,7 +52,7 @@ export const analyzeRepo = async (repoUrl: string = 'https://github.com/nathanna
       throw new Error('Only GitHub repository URLs are supported.');
     }
     // Accepts full URL or owner/repo
-    let owner = '', repo = '', branch = 'main';
+    let owner = '', repo = '', branch = 'master';
     let repoMatch = repoUrl.match(/github.com[/:]([^/]+)\/([^/]+)(?:\/tree\/([^/]+))?/);
     if (!repoMatch) {
       // Try owner/repo format
@@ -67,11 +67,9 @@ export const analyzeRepo = async (repoUrl: string = 'https://github.com/nathanna
       owner = repoMatch[1];
       repo = repoMatch[2].replace(/\.git$/, '');
       if (repoMatch[3]) branch = repoMatch[3];
+      else branch = 'master';
     }
-    // Get the root tree SHA
-    const repoInfo = await axios.get(`https://api.github.com/repos/${owner}/${repo}`);
-    if (repoInfo.data.default_branch) branch = repoInfo.data.default_branch;
-    // Get the tree recursively
+    // Always use master branch unless a branch is explicitly specified
     const treeResp = await axios.get(`https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`);
     const tree = treeResp.data.tree;
     // Build file tree structure
@@ -123,6 +121,8 @@ async function fetchFileContent(filePath: string): Promise<string> {
       let rawUrl = filePath;
       if (rawUrl.includes('github.com')) {
         rawUrl = rawUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+        // Always use master branch in the URL if not specified
+        rawUrl = rawUrl.replace('/main/', '/master/');
       }
       const response = await axios.get(rawUrl);
       return response.data;
@@ -132,8 +132,9 @@ async function fetchFileContent(filePath: string): Promise<string> {
       // For now, assume window.currentRepoInfo = { owner, repo, branch }
       // (You may want to refactor this to pass repo info explicitly)
       const repoInfo = (window as any).currentRepoInfo;
-      if (repoInfo && repoInfo.owner && repoInfo.repo && repoInfo.branch) {
-        const rawUrl = `https://raw.githubusercontent.com/${repoInfo.owner}/${repoInfo.repo}/${repoInfo.branch}${filePath}`;
+      if (repoInfo && repoInfo.owner && repoInfo.repo) {
+        const branch = repoInfo.branch || 'master';
+        const rawUrl = `https://raw.githubusercontent.com/${repoInfo.owner}/${repoInfo.repo}/${branch}${filePath}`;
         const response = await axios.get(rawUrl);
         return response.data;
       } else {

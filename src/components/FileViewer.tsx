@@ -1,7 +1,9 @@
 import { styled } from '@mui/material/styles';
 import { Box, CircularProgress } from '@mui/material';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vs2015 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+ import  SyntaxHighlighter  from 'react-syntax-highlighter';
+ import { vs2015 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+//import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+//import { vs2015 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 
 
@@ -125,7 +127,8 @@ const FileViewer = ({ fileContent, analysis, loading = false, filePath }: FileVi
       <ContentPanel>
         {displayContent ? (
           <SyntaxHighlighter
-            language={getLanguageFromPath(filePath)}
+            language='typescript'
+            //{getLanguageFromPath(filePath)}
             style={vs2015}
             customStyle={{
               padding: '16px',
@@ -134,7 +137,7 @@ const FileViewer = ({ fileContent, analysis, loading = false, filePath }: FileVi
             }}
             showLineNumbers={false}
             wrapLongLines={true}
-            className="hljs"
+           // className="hljs"
           >
             {displayContent}
           </SyntaxHighlighter>

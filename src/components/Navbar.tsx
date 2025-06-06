@@ -20,8 +20,26 @@ const Navbar = ({ repoUrl }: NavbarProps) => {
             </Typography>
           </Box>
           {repoUrl && (
-            <Box sx={{ color: '#4fa3ff', fontSize: 14, ml: 2, fontFamily: 'monospace', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 500 }}>
-              {repoUrl}
+            <Box sx={{ ml: 2, maxWidth: 500, display: 'flex', alignItems: 'center' }}>
+              <a
+                href={repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: '#4fa3ff',
+                  fontSize: 14,
+                  fontFamily: 'monospace',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  textDecoration: 'underline',
+                  display: 'inline-block',
+                  maxWidth: 500,
+                }}
+                title={repoUrl}
+              >
+                {repoUrl}
+              </a>
             </Box>
           )}
           <Box sx={{ flexGrow: 1 }} />

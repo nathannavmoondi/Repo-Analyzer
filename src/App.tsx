@@ -50,16 +50,37 @@ const ContentArea = styled(Box)({
   overflow: 'auto',
 });
 
+
 function App() {
   const [files, setFiles] = useState<FileNode[]>([]);
   const [selectedFileContent, setSelectedFileContent] = useState<string>('Welcome to Repo Analyzer\n\nClick "Open" in the navbar to analyze a GitHub repository.');
   const [fileAnalysis, setFileAnalysis] = useState<string>('');
   const [fileLoading, setFileLoading] = useState(false);
-  const [repoUrl, setRepoUrl] = useState<string>('');
+  const [repoUrl, setRepoUrl] = useState<string>('https://github.com/nathannavmoondi/Rapid-Training');
 
-  // No automatic loading of default repository on mount
-
+  // Automatically load default repository on mount
   useEffect(() => {
+    const defaultUrl = 'https://github.com/nathannavmoondi/Rapid-Training';
+    const loadDefaultRepo = async () => {
+      setFileLoading(true);
+      try {
+        setRepoUrl(defaultUrl);
+        setCurrentGitHubRepoInfo(defaultUrl);
+        const fileData = await analyzeRepo(defaultUrl);
+        setFiles(Array.isArray(fileData) ? fileData : []);
+        setSelectedFileContent('Repo Loaded!\n\nPlease click a file to learn more about it');
+        setFileAnalysis('');
+      } catch (error) {
+        console.error('Error analyzing repo:', error);
+        setSelectedFileContent('Error analyzing repository. Please check the URL and try again.');
+        setRepoUrl('');
+      } finally {
+        setFileLoading(false);
+      }
+    };
+
+    loadDefaultRepo();
+
     const handleAnalyzeRepo = async (e: Event) => {
       setFileLoading(true);
       try {

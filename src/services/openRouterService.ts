@@ -72,11 +72,13 @@ export const analyzeRepo = async (repoUrl: string = 'https://github.com/nathanna
     // Always use master branch unless a branch is explicitly specified
     const treeResp = await axios.get(`https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`);
     const tree = treeResp.data.tree;
-    // Build file tree structure
+    // Build file tree structure, sort folders first, hide .jpg/.jpeg files
     function buildTree(treeArr: any[]): FileNode[] {
       const root: any = {};
       for (const item of treeArr) {
+        // Hide dist, node_modules, and .jpg/.jpeg files (case-insensitive)
         if (item.path.startsWith('dist/') || item.path.startsWith('node_modules/')) continue;
+        if (item.type !== 'tree' && /\.(jpg|jpeg)$/i.test(item.path)) continue;
         const parts = item.path.split('/');
         let curr = root;
         for (let i = 0; i < parts.length; i++) {
@@ -93,12 +95,17 @@ export const analyzeRepo = async (repoUrl: string = 'https://github.com/nathanna
         }
       }
       function toArray(obj: any): FileNode[] {
-        return Object.values(obj).map((node: any) => ({
+        // Sort: folders first, then files, both alphabetically
+        const nodes = Object.values(obj).map((node: any) => ({
           name: node.name,
           path: node.path,
           type: node.type,
           children: node.type === 'folder' ? toArray(node.children) : undefined
         }));
+        return nodes.sort((a, b) => {
+          if (a.type === b.type) return a.name.localeCompare(b.name);
+          return a.type === 'folder' ? -1 : 1;
+        });
       }
       return toArray(root);
     }

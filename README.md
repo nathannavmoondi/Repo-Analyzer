@@ -1,54 +1,39 @@
-# React + TypeScript + Vite
+# Repo Analyzer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Repo Analyzer Banner](https://github.com/user-attachments/assets/16c256dc-c0bb-44b0-ab67-a0d2ae77d40f)
 
-Currently, two official plugins are available:
+**Live App:** [https://repo-analyzer-iota.vercel.app/](https://repo-analyzer-iota.vercel.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Overview
 
-## Expanding the ESLint configuration
+**Repo Analyzer** is an onboarding tool designed to help users quickly understand and navigate any GitHub repository. Whether you're joining a new project, reviewing open source code, or just want to get up to speed with an unfamiliar codebase, Repo Analyzer makes it easy by providing a clear overview and file summaries.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Features
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **Repository Loading:** Instantly load any public GitHub repository to explore its contents.
+- **File Summary:** Get a concise summary of each file to understand its purpose and contents without reading the entire code.
+- **Onboarding Made Easy:** Especially useful for new contributors or team members needing to understand project structure and key files at a glance.
+- **User-Friendly Interface:** Clean, intuitive web app for a smooth onboarding experience.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## How It Works
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Enter a GitHub Repository URL:** Paste in the link to any public repository.
+2. **Explore the Files:** The tool loads the repository and displays the file tree.
+3. **Read Summaries:** Click on any file to view a summary, helping you understand what each file does.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Getting Started
+
+**Try it out now:**  
+👉 [https://repo-analyzer-iota.vercel.app/](https://repo-analyzer-iota.vercel.app/)
+
+No installation required — just visit the URL and start analyzing repositories!
+
+## Use Cases
+
+- New team members onboarding to a project
+- Open source contributors reviewing unfamiliar repos
+- Developers auditing or exploring third-party codebases
+
+---
+
+Empower your GitHub onboarding experience with Repo Analyzer!

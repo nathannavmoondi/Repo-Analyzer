@@ -119,6 +119,7 @@ function App() {
     setFileLoading(true);
     try {
       const result = await analyzeFile(filePath);
+      console.log('file contents is', result.content);
       setSelectedFileContent(result.content);
       setFileAnalysis(result.analysis);
     } catch (error) {

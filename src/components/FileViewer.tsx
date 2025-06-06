@@ -81,7 +81,14 @@ const FileViewer = ({ fileContent, analysis, loading = false }: FileViewerProps)
     );
   }
 
-  return (
+   if (typeof fileContent === 'string')
+   {
+    console.log('File content:', fileContent); // Debug log
+   }
+   else
+   console.log('File content stringify', JSON.stringify(fileContent, null, 2)); // Debug log
+
+  return (  
     <ViewerContainer>
       <ContentPanel>
         <SyntaxHighlighter
@@ -120,8 +127,7 @@ tempAnalysis = tempAnalysis.replace(/(<br\s*\/?\s*>|<br\/>|<br>|&lt;br\s*\/?\s*&
 // Remove ```html and ``` (for code block wrappers)
 tempAnalysis = tempAnalysis.replace(/```html|```/gi, '');
 tempAnalysis = tempAnalysis.trim();
-
-    console.log('Rendered analysis HTML no br:', tempAnalysis); // Debug log
+    
     return tempAnalysis;
 }
 

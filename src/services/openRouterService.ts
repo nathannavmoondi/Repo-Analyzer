@@ -203,7 +203,6 @@ analysisHtml = analysisHtml.replace(/(<br\s*\/?\s*>|<br\/>|<br>|&lt;br\s*\/?\s*&
 // Remove ```html and ``` (for code block wrappers)
 analysisHtml = analysisHtml.replace(/```html|```/gi, '');
 analysisHtml = analysisHtml.trim();
-console.log('should be no br', analysisHtml); // Debug log 
 
     return {
       content,

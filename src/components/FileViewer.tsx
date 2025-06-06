@@ -122,13 +122,14 @@ const FileViewer = ({ fileContent, analysis, loading = false, filePath }: FileVi
 
   const displayContent = typeof fileContent === 'string' ? fileContent : (fileContent ? JSON.stringify(fileContent, null, 2) : '');
 
+  
   return (
     <ViewerContainer>
       <ContentPanel>
         {displayContent ? (
           <SyntaxHighlighter
             language='typescript'
-            //{getLanguageFromPath(filePath)}
+            //language ={getLanguageFromPath(filePath)}
             style={vs2015}
             customStyle={{
               padding: '16px',

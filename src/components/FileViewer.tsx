@@ -101,6 +101,7 @@ const FileViewer = ({ fileContent, analysis, loading = false }: FileViewerProps)
           }}
           showLineNumbers={false}
           wrapLongLines={true}
+          className="hljs"
         >
           {typeof fileContent === 'string' ? fileContent : JSON.stringify(fileContent, null, 2) || 'Select a file to view its contents'}
         </SyntaxHighlighter>

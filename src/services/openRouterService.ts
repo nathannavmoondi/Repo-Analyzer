@@ -163,8 +163,8 @@ export const analyzeFile = async (fileUrl: string): Promise<FileAnalysis> => {
       API_URL,
       {
         //model: 'openai/gpt-3.5-turbo',
-        model: 'google/gemini-2.5-pro-preview',
-        max_tokens: 2000,
+        //model: 'google/gemini-2.5-pro-preview',
+        model: 'anthropic/claude-sonnet-4',        
         messages: [
           {
             role: 'system',            

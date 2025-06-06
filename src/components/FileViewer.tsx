@@ -1,7 +1,8 @@
-import { Box, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vs2015 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+
+import 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015.css';
 
 interface FileViewerProps {
   fileContent?: string;

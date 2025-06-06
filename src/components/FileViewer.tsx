@@ -4,10 +4,12 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vs2015 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 
+
 interface FileViewerProps {
   fileContent?: string;
   analysis?: string;
   loading?: boolean;
+  filePath?: string;
 }
 
 const ViewerContainer = styled(Box)({
@@ -72,7 +74,40 @@ const LoaderContainer = styled(Box)({
   backgroundColor: '#1e1e1e',
 });
 
-const FileViewer = ({ fileContent, analysis, loading = false }: FileViewerProps) => {
+function getLanguageFromPath(path?: string): string {
+  if (!path) return 'plaintext';
+  const ext = path.split('.').pop()?.toLowerCase();
+  switch (ext) {
+    case 'js': return 'javascript';
+    case 'ts': return 'typescript';
+    case 'tsx': return 'tsx';
+    case 'jsx': return 'jsx';
+    case 'json': return 'json';
+    case 'css': return 'css';
+    case 'md': return 'markdown';
+    case 'py': return 'python';
+    case 'java': return 'java';
+    case 'c': return 'c';
+    case 'cpp': return 'cpp';
+    case 'h': return 'cpp';
+    case 'sh': return 'bash';
+    case 'yml':
+    case 'yaml': return 'yaml';
+    case 'html': return 'xml';
+    case 'xml': return 'xml';
+    case 'go': return 'go';
+    case 'rb': return 'ruby';
+    case 'php': return 'php';
+    case 'rs': return 'rust';
+    case 'cs': return 'csharp';
+    case 'scss': return 'scss';
+    case 'less': return 'less';
+    case 'txt': return 'plaintext';
+    default: return 'plaintext';
+  }
+}
+
+const FileViewer = ({ fileContent, analysis, loading = false, filePath }: FileViewerProps) => {
   if (loading) {
     return (
       <LoaderContainer>
@@ -81,30 +116,31 @@ const FileViewer = ({ fileContent, analysis, loading = false }: FileViewerProps)
     );
   }
 
-   if (typeof fileContent === 'string')
-   {
-    console.log('File content:', fileContent); // Debug log
-   }
-   else
-   console.log('File content stringify', JSON.stringify(fileContent, null, 2)); // Debug log
 
-  return (  
+
+  const displayContent = typeof fileContent === 'string' ? fileContent : (fileContent ? JSON.stringify(fileContent, null, 2) : '');
+
+  return (
     <ViewerContainer>
       <ContentPanel>
-        <SyntaxHighlighter
-          language="typescript"
-          style={vs2015}
-          customStyle={{
-            padding: '16px',
-            margin: 0,
-            background: 'transparent',
-          }}
-          showLineNumbers={false}
-          wrapLongLines={true}
-          className="hljs"
-        >
-          {typeof fileContent === 'string' ? fileContent : JSON.stringify(fileContent, null, 2) || 'Select a file to view its contents'}
-        </SyntaxHighlighter>
+        {displayContent ? (
+          <SyntaxHighlighter
+            language={getLanguageFromPath(filePath)}
+            style={vs2015}
+            customStyle={{
+              padding: '16px',
+              margin: 0,
+              background: 'transparent',
+            }}
+            showLineNumbers={false}
+            wrapLongLines={true}
+            className="hljs"
+          >
+            {displayContent}
+          </SyntaxHighlighter>
+        ) : (
+          <Box sx={{ color: '#888', p: 2 }}>Select a file to view its contents</Box>
+        )}
       </ContentPanel>
       <AnalysisPanel>
         {/* Render analysis as HTML with code highlighting if present */}

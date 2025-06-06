@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { Box, CircularProgress } from '@mui/material';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vs2015 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 

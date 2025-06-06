@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Box, CssBaseline } from '@mui/material';
+import { Box, CssBaseline, Button, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Navbar from './components/Navbar';
 import FileTree from './components/FileTree';
 import FileViewer from './components/FileViewer';
 import { analyzeRepo, analyzeFile, setCurrentGitHubRepoInfo } from './services/openRouterService';
+import { useRef } from 'react';
 
 interface FileNode {
   name: string;
@@ -57,6 +58,8 @@ function App() {
   const [fileAnalysis, setFileAnalysis] = useState<string>('');
   const [fileLoading, setFileLoading] = useState(false);
   const [repoUrl, setRepoUrl] = useState<string>('https://github.com/nathannavmoondi/Rapid-Training');
+  const [slidedeckLoading, setSlidedeckLoading] = useState(false);
+  const [slidedeckContent, setSlidedeckContent] = useState<string | null>(null);
 
   // Automatically load default repository on mount
   useEffect(() => {
@@ -117,9 +120,9 @@ function App() {
 
   const handleFileSelect = async (filePath: string) => {
     setFileLoading(true);
+    setSlidedeckContent(null); // Hide slidedeck if selecting a file
     try {
       const result = await analyzeFile(filePath);
-      console.log('file contents is', result.content);
       setSelectedFileContent(result.content);
       setFileAnalysis(result.analysis);
     } catch (error) {
@@ -131,20 +134,74 @@ function App() {
     }
   };
 
+  // Slidedeck handler
+  const handleSlidedeck = async () => {
+    setSlidedeckLoading(true);
+    setSlidedeckContent(null);
+    try {
+      const { createSlidedeckForRepo } = await import('./services/openRouterService');
+      const result = await createSlidedeckForRepo(repoUrl);
+      setSlidedeckContent(result);
+    } catch (e) {
+      console.error('Slidedeck error:', e);
+      setSlidedeckContent('Error generating slidedeck.');
+    } finally {
+      setSlidedeckLoading(false);
+    }
+  };
+
   return (
     <MainContainer>
       <CssBaseline />
       <Navbar repoUrl={repoUrl} />
       <ContentContainer sx={{ pb: '56px' }}>
-        <Sidebar sx={{ background: '#232323', borderRight: '1px solid #333', p: 0, minWidth: 0 }}>
-          <FileTree files={files} onFileSelect={handleFileSelect} />
+        <Sidebar sx={{ background: '#232323', borderRight: '1px solid #333', p: 0, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+          {/* Slidedeck Button at the top of the sidebar */}
+          <Button
+            variant="contained"
+            sx={{
+              background: '#ffe066',
+              color: '#111',
+              fontWeight: 700,
+              borderRadius: 2,
+              px: 3,
+              py: 1,
+              mt: 2,
+              mb: 2,
+              ml: 2,
+              boxShadow: 'none',
+              textTransform: 'none',
+              fontSize: 16,
+              alignSelf: 'flex-start',
+              '&:hover': { background: '#ffd700' },
+            }}
+            onClick={handleSlidedeck}
+            // disabled={slidedeckLoading || fileLoading}
+          >
+            {slidedeckLoading ? 'Generating...' : 'Slidedeck'}
+          </Button>
+          <FileTree
+            files={files}
+            onFileSelect={handleFileSelect}
+          />
         </Sidebar>
         <ContentArea>
-          <FileViewer 
-            fileContent={selectedFileContent}
-            analysis={fileAnalysis}
-            loading={fileLoading}
-          />
+          {slidedeckLoading ? (
+            <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <CircularProgress sx={{ color: '#007acc' }} />
+            </Box>
+          ) : slidedeckContent ? (
+            <Box sx={{ width: '100%', height: '100%', background: '#1e1e1e', color: '#fff', p: 3, overflow: 'auto' }}>
+              <div dangerouslySetInnerHTML={{ __html: slidedeckContent }} />
+            </Box>
+          ) : (
+            <FileViewer 
+              fileContent={selectedFileContent}
+              analysis={fileAnalysis}
+              loading={fileLoading}
+              repoUrl={repoUrl}
+            />
+          )}
         </ContentArea>
       </ContentContainer>
       <Box sx={{ width: '100vw', background: 'linear-gradient(90deg, #1976d2 60%, #1565c0 100%)', color: '#fff', textAlign: 'center', py: 1.5, fontSize: 15, fontWeight: 500, letterSpacing: 0.2, position: 'fixed', left: 0, bottom: 0, zIndex: 1200 }}>

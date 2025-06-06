@@ -12,6 +12,7 @@ interface FileViewerProps {
   analysis?: string;
   loading?: boolean;
   filePath?: string;
+  repoUrl?: string;
 }
 
 const ViewerContainer = styled(Box)({
@@ -122,7 +123,7 @@ const FileViewer = ({ fileContent, analysis, loading = false, filePath }: FileVi
 
   const displayContent = typeof fileContent === 'string' ? fileContent : (fileContent ? JSON.stringify(fileContent, null, 2) : '');
 
-  
+
   return (
     <ViewerContainer>
       <ContentPanel>

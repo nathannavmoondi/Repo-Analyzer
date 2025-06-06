@@ -1,3 +1,40 @@
+// Slidedeck generator for a repo
+export async function createSlidedeckForRepo(repoUrl: string): Promise<string> {
+  const API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
+  const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+  const headers = {
+    'Authorization': `Bearer ${API_KEY}`,
+    'Content-Type': 'application/json',
+    'HTTP-Referer': 'https://github.com/repo-analyzer',
+  };
+  console.log('creating slidedeck for repo:', repoUrl);
+  const prompt = `Create a slidedeck analyzing the github repo (${repoUrl}). It should tell a brand new person all about this repo,
+   what it does, what technology it uses and how it flows. Keep it basic don't get too detailed.\n\n
+   Each section must be wrapped into its own separate <div class=\"content-block\">. 
+   Within each <div class=\"content-block\">, use appropriate HTML tags:\n- Use <h2> for the main title of that section.\n- Use <p> for all paragraphs of text.\n- Use <ul> or <ol> for lists, with <li> for list items.\n\nThe slidedeck should be comprehensive and lengthy.\nIt must NOT include a <head> HTML element.\n
+   Include nice formatting, colors, and code blocks where appropriate.
+  Use <pre> and <code> for code blocks, and <span> or <b> for highlights.\n
+  Do not include html and body tags in your response. Only return the HTML fragment for the slidedeck.\n
+   `;
+  const messages = [
+    { role: 'system', content: 'You are a code analysis and documentation expert.' },
+    { role: 'user', content: prompt }
+  ];
+  const response = await axios.post(
+    API_URL,
+    {
+      model: 'anthropic/claude-sonnet-4',
+      messages
+    },
+    { headers }
+  );
+  let html = response.data.choices[0].message.content;
+  // Remove <head>, <style>, and inline style attributes if present
+  html = html.replace(/<head[\s\S]*?<\/head>/gi, '');
+  html = html.replace(/<style[\s\S]*?<\/style>/gi, '');
+  html = html.replace(/ style="[^"]*"/gi, '');
+  return html.trim();
+}
 // Utility: Extracts owner, repo, branch from a GitHub URL or owner/repo string and sets window.currentRepoInfo
 export function setCurrentGitHubRepoInfo(repoUrl: string) {
   let owner = '', repo = '', branch = 'master';

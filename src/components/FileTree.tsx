@@ -1,4 +1,4 @@
-import { Box, List, ListItem, ListItemIcon, ListItemText, Collapse } from '@mui/material';
+import { Box, List, ListItem, ListItemIcon, ListItemText, Collapse, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
   FolderOutlined,
@@ -21,6 +21,9 @@ interface FileNode {
 interface FileTreeProps {
   files: FileNode[];
   onFileSelect: (path: string) => void;
+  onSlidedeckClick?: () => void;
+  slidedeckLoading?: boolean;
+  fileLoading?: boolean;
 }
 
 const TreeContainer = styled(Box)({
@@ -64,7 +67,7 @@ const getFileIcon = (fileName: string) => {
   }
 };
 
-const FileTree = ({ files, onFileSelect }: FileTreeProps) => {
+const FileTree = ({ files, onFileSelect, onSlidedeckClick, slidedeckLoading, fileLoading }: FileTreeProps) => {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -134,6 +137,8 @@ const FileTree = ({ files, onFileSelect }: FileTreeProps) => {
 
   return (
     <TreeContainer>
+      {/* Slidedeck Button at the top */}
+     
       <List disablePadding>
         {renderTree(files)}
       </List>

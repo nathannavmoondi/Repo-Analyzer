@@ -68,7 +68,7 @@ function App() {
         setCurrentGitHubRepoInfo(defaultUrl);
         const fileData = await analyzeRepo(defaultUrl);
         setFiles(Array.isArray(fileData) ? fileData : []);
-        setSelectedFileContent('Repo Loaded!\n\nPlease click a file. Code will appear here');
+        setSelectedFileContent('Repo Loaded!\n\nOnboarding tool to help you learn a repo.\nPlease click a file. Code will appear here');
         setFileAnalysis('');
       } catch (error) {
         console.error('Error analyzing repo:', error);

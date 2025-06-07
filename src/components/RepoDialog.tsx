@@ -19,7 +19,7 @@ const RepoDialog = ({ open, onClose }: RepoDialogProps) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>      <DialogTitle>Open Repository or Solution</DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>      <DialogTitle>Open PUBLIC Github Repository</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus

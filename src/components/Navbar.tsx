@@ -16,7 +16,7 @@ const Navbar = ({ repoUrl }: NavbarProps) => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <img src="/favicon.ico" alt="favicon" style={{ width: 26, height: 26, marginRight: 10, marginTop: 1, borderRadius: 4, boxShadow: '0 1px 4px #0002' }} />
             <Typography variant="h6" component="div" sx={{ color: '#fff', fontWeight: 700, fontSize: 20, letterSpacing: 0.5 }}>
-              Repo Analyzer
+              Repo Analyzer (Nathan Moondi DEMO)
             </Typography>
           </Box>
           {repoUrl && (

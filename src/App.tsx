@@ -63,7 +63,7 @@ function App() {
 
   // Automatically load default repository on mount
   useEffect(() => {
-    const defaultUrl = 'https://github.com/nathannavmoondi/Rapid-Training';
+    const defaultUrl = 'https://github.com/nathannavmoondi/Repo-Analyzer';
     const loadDefaultRepo = async () => {
       setFileLoading(true);
       try {

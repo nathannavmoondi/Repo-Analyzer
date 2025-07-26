@@ -36,8 +36,8 @@ const ContentPanel = styled(Box)({
   },
   '& code': {
     fontFamily: "'SF Mono', Monaco, Menlo, Consolas, 'Ubuntu Mono', monospace",
-    fontSize: '13px',
-    lineHeight: '20px',
+    fontSize: '15px',
+    lineHeight: '1.3',
   },
   '&::-webkit-scrollbar': {
     width: '14px',
@@ -61,11 +61,40 @@ const AnalysisPanel = styled(Box)({
   overflow: 'auto',
   padding: '16px',
   borderLeft: '1px solid #333333',
+  backgroundColor: '#1e1e1e',
+  color: '#cccccc',
   fontFamily: "'SF Mono', Monaco, Menlo, Consolas, 'Ubuntu Mono', monospace",
-  fontSize: '13px',
-  lineHeight: '1.5',
+  fontSize: '15px',
+  lineHeight: '1.3',
   whiteSpace: 'pre-wrap',
-  wordWrap: 'break-word'
+  wordWrap: 'break-word',
+  '& *': {
+    lineHeight: '1.3 !important',
+  },
+  '& h1, & h2, & h3, & h4, & h5, & h6': {
+    margin: '3px 0 1px 0',
+    lineHeight: '1.3 !important',
+  },
+  '& p': {
+    margin: '0px 0',
+    lineHeight: '1.3 !important',
+  },
+  '& div': {
+    margin: '0',
+    lineHeight: '1.3 !important',
+  },
+  '& ul, & ol': {
+    margin: '1px 0',
+    paddingLeft: '20px',
+    lineHeight: '1.3 !important',
+  },
+  '& li': {
+    margin: '0px 0',
+    lineHeight: '1.3 !important',
+  },
+  '& br': {
+    lineHeight: '0.3',
+  },
 });
 
 const LoaderContainer = styled(Box)({
@@ -136,6 +165,8 @@ const FileViewer = ({ fileContent, analysis, loading = false, filePath }: FileVi
               padding: '16px',
               margin: 0,
               background: 'transparent',
+              fontSize: '15px',
+              lineHeight: '1.3',
             }}
             showLineNumbers={false}
             wrapLongLines={true}
